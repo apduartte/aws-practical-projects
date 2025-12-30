@@ -1,0 +1,13 @@
+name: Teste Esteira
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+      - name: Teste simples
+        run: echo "Esteira funcionando!"
+
