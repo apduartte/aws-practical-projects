@@ -1,4 +1,4 @@
-# Desafio RDS + SQL Server na AWS
+# Desafio 03 — SQL Server 2022 na AWS (EC2 + Docker + SSM)
 
 ![AWS](https://img.shields.io/badge/AWS-Cloud-orange?logo=amazonaws&logoColor=white)
 ![EC2](https://img.shields.io/badge/EC2-Instance-blue?logo=amazonec2&logoColor=white)
@@ -7,160 +7,63 @@
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04-brown?logo=ubuntu&logoColor=white)
 ![DBeaver](https://img.shields.io/badge/DBeaver-Client-green?logo=dbeaver&logoColor=white)
 
-Projeto prático que documenta a criação de uma instância EC2 na AWS, execução do SQL Server 2022 em container Docker, adoção de práticas seguras de acesso (AWS Systems Manager e SSH) e restauração do banco AdventureWorks2022.
-O projeto simula cenários corporativos reais de uso de banco de dados em nuvem.
+Projeto prático da **Formação AWS 5.0** que implementa um ambiente de **SQL Server 2022** em **container Docker** dentro de uma **instância EC2 (Ubuntu)**, com **acesso seguro via AWS Systems Manager (SSM)** (e SSH quando necessário) e **restauração do banco AdventureWorks2022**.
 
-📄 Documentação
+---
 
-📥 PDF com prints e passo a passo do desafio:
-Desafio RDS + SQL Server na AWS (PDF)
+## 🎯 Objetivo
+Demonstrar a criação e operação de um ambiente de banco de dados na AWS, aplicando:
+- **Provisionamento e operação em Cloud (EC2)**
+- **Containerização (Docker)**
+- **Segurança de acesso (SSM / IAM / Security Groups)**
+- **Administração de banco (backup/restore, validações)**
+- **Troubleshooting e observabilidade básica (logs)**
 
-🎯 Objetivo
+---
 
-Demonstrar o provisionamento, configuração e operação de um ambiente SQL Server na AWS, aplicando conceitos de:
+## 🏗️ Arquitetura (visão geral)
+**Cliente (DBeaver / sqlcmd)**  
+⬇ (conexão segura)  
+**EC2 (Ubuntu)**  
+⬇  
+**Docker**  
+⬇  
+**SQL Server 2022**  
+⬇  
+**AdventureWorks2022**
 
-Cloud Computing
+> Arquitetura simples, porém representativa de cenários corporativos em nuvem.
 
-Segurança
+---
 
-Persistência de dados
+## ⚙️ Tecnologias utilizadas
+- AWS: **EC2**, **IAM**, **Systems Manager (SSM)**, **Security Groups**
+- **Ubuntu 24.04**
+- **Docker**
+- **SQL Server 2022**
+- **DBeaver**
+- Base: **AdventureWorks2022**
 
-Integração aplicação–banco
+---
 
-Boas práticas de infraestrutura moderna
+## 🔒 Segurança (pontos valorizados por recrutadores)
+- Acesso preferencial via **SSM Session Manager** (reduz exposição de SSH)
+- **Security Group restritivo** (evitar expor a porta 1433 publicamente)
+- **Senha forte** para usuário `sa` e segredos fora do repositório
+- Prática de operação com checklist de **desligamento** para evitar custos
 
-🏗️ Arquitetura (Visão Geral)
+---
 
-Usuário / Ferramenta Cliente (DBeaver)
-⬇
-EC2 (Ubuntu)
-⬇
-Docker
-⬇
-SQL Server 2022
-⬇
-Banco Relacional (AdventureWorks2022)
+## 🚀 Execução (resumo)
+1. Criar EC2 (Ubuntu) e configurar SG
+2. Associar Role IAM e habilitar SSM
+3. Instalar Docker na EC2
+4. Subir SQL Server 2022 em container
+5. Restaurar o **AdventureWorks2022**
+6. Conectar via DBeaver e validar
 
-Arquitetura simples, porém representativa de ambientes corporativos em nuvem.
+---
 
-⚙️ Tecnologias Utilizadas
+## 🖥️ Comandos principais (exemplo)
 
-Amazon Web Services (AWS)
-
-Amazon EC2
-
-Ubuntu 24.04
-
-Docker
-
-SQL Server 2022
-
-AWS Systems Manager (Session Manager)
-
-DBeaver
-
-AdventureWorks2022
-
-🧠 Conceitos Demonstrados (Keywords ATS)
-
-Cloud Computing (AWS)
-
-Bancos de dados relacionais
-
-Persistência de dados
-
-Integração aplicação–banco
-
-Infraestrutura como código (fundamentos)
-
-Sistemas distribuídos (conceitos)
-
-Segurança em ambientes cloud
-
-Ambientes corporativos em nuvem
-
-🧪 Testes Automatizados
-
-Testes automatizados (fundamentos)
-Estrutura preparada para validação de regras e integração com banco de dados, podendo ser evoluída para testes unitários e de integração conforme a aplicação.
-
-🐳 Docker
-
-Docker utilizado para execução do SQL Server em container
-
-Padronização do ambiente
-
-Facilidade de setup e testes locais
-
-☸️ Kubernetes
-
-Kubernetes (exemplo / conceito)
-Projeto preparado para estudos de deploy e service, simulando execução em ambiente orquestrado.
-
-🔐 Segurança
-
-Acesso via AWS Systems Manager (Session Manager), sem exposição da porta 1433
-
-Uso de chave SSH (.pem) com permissões restritas
-
-Port forwarding seguro para conexão local
-
-Boas práticas de isolamento de recursos em nuvem
-
-📦 Banco de Dados
-
-Banco AdventureWorks2022 restaurado com sucesso
-
-Ambiente pronto para consultas, estudos e testes
-
-🖥️ Principais Comandos Utilizados
-🔑 Conexão SSH
-ssh -i ~/.ssh/bia-conectividade-linux.pem ec2-user@<public-dns-ec2>
-
-🐳 Verificação do Docker
-docker --version
-docker ps
-
-📥 Download do AdventureWorks2022
-wget https://github.com/.../AdventureWorks2022.bak
-ls AdventureWorks2022.bak
-
-🗄️ Subir container do SQL Server 2022
-docker run -e "ACCEPT_EULA=Y" \
-  -e "MSSQL_SA_PASSWORD=SenhaSegura123!" \
-  -p 1433:1433 \
-  --name sql1 \
-  --hostname sql1 \
-  -d mcr.microsoft.com/mssql/server:2022-latest
-
-🛠️ Conexão via sqlcmd
-docker exec -it sql1 /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'SenhaSegura123!'
-
-📂 Restaurar banco AdventureWorks2022
-RESTORE DATABASE AdventureWorks2022
-FROM DISK = '/var/opt/mssql/data/AdventureWorks2022.bak'
-WITH MOVE 'AdventureWorks2022' 
-     TO '/var/opt/mssql/data/AdventureWorks2022.mdf',
-     MOVE 'AdventureWorks2022_log' 
-     TO '/var/opt/mssql/data/AdventureWorks2022.ldf';
-
-🚀 Evoluções Possíveis
-
-Integração com aplicações Java ou .NET
-
-Criação de pipelines CI/CD
-
-Implementação completa de testes automatizados
-
-Automação de infraestrutura com Terraform
-
-Evolução para RDS gerenciado e/ou Kubernetes
-
-📚 Contexto
-
-Projeto desenvolvido com foco em aprendizado contínuo, prática em cloud AWS e preparação para cenários reais de engenharia de software e dados.
-
-Autora: Ana Paula Duarte
-📧 Contato: apduartte@gmail.com
-
-🔗 GitHub: https://github.com/apduartte
+### Subir SQL Server 2
