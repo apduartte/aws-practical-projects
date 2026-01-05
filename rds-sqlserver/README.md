@@ -7,71 +7,160 @@
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04-brown?logo=ubuntu&logoColor=white)
 ![DBeaver](https://img.shields.io/badge/DBeaver-Client-green?logo=dbeaver&logoColor=white)
 
-Este projeto documenta a criação de uma instância EC2 com SQL Server 2022 via Docker, utilizando práticas seguras de acesso com AWS Systems Manager e SSH, além da restauração do banco AdventureWorks2022.
+Projeto prático que documenta a criação de uma instância EC2 na AWS, execução do SQL Server 2022 em container Docker, adoção de práticas seguras de acesso (AWS Systems Manager e SSH) e restauração do banco AdventureWorks2022.
+O projeto simula cenários corporativos reais de uso de banco de dados em nuvem.
 
-## 📄 Documentação
-[📥 Clique aqui para abrir o PDF com os prints e etapas do desafio](Desafio2_RDS_SQLServer.pdf)
+📄 Documentação
 
----
+📥 PDF com prints e passo a passo do desafio:
+Desafio RDS + SQL Server na AWS (PDF)
 
-## ⚙️ Tecnologias utilizadas
-- Amazon EC2
-- Amazon Linux / Ubuntu
-- Docker
-- SQL Server 2022
-- AWS Systems Manager
-- DBeaver
-- AdventureWorks2022
+🎯 Objetivo
 
----
+Demonstrar o provisionamento, configuração e operação de um ambiente SQL Server na AWS, aplicando conceitos de:
 
-## 🔐 Segurança
-- Acesso via Session Manager (sem expor porta 1433)
-- Chave SSH (.pem) com permissões restritas
-- Port forwarding seguro para conexão local
+Cloud Computing
 
----
+Segurança
 
-## 📦 Banco restaurado
-- AdventureWorks2022.bak importado com sucesso
-- Ambiente pronto para consultas e testes
+Persistência de dados
 
----
+Integração aplicação–banco
 
-## 🖥️ Principais comandos utilizados
+Boas práticas de infraestrutura moderna
 
-### 🔑 Conexão SSH
-```bash
-ssh -i ~/.ssh/bia-conectividade-linux.pem ec2-user@ec2-44-222-255-252.compute-1.amazonaws.com
+🏗️ Arquitetura (Visão Geral)
 
-## 🐳 Verificação do Docker
-```bash
+Usuário / Ferramenta Cliente (DBeaver)
+⬇
+EC2 (Ubuntu)
+⬇
+Docker
+⬇
+SQL Server 2022
+⬇
+Banco Relacional (AdventureWorks2022)
+
+Arquitetura simples, porém representativa de ambientes corporativos em nuvem.
+
+⚙️ Tecnologias Utilizadas
+
+Amazon Web Services (AWS)
+
+Amazon EC2
+
+Ubuntu 24.04
+
+Docker
+
+SQL Server 2022
+
+AWS Systems Manager (Session Manager)
+
+DBeaver
+
+AdventureWorks2022
+
+🧠 Conceitos Demonstrados (Keywords ATS)
+
+Cloud Computing (AWS)
+
+Bancos de dados relacionais
+
+Persistência de dados
+
+Integração aplicação–banco
+
+Infraestrutura como código (fundamentos)
+
+Sistemas distribuídos (conceitos)
+
+Segurança em ambientes cloud
+
+Ambientes corporativos em nuvem
+
+🧪 Testes Automatizados
+
+Testes automatizados (fundamentos)
+Estrutura preparada para validação de regras e integração com banco de dados, podendo ser evoluída para testes unitários e de integração conforme a aplicação.
+
+🐳 Docker
+
+Docker utilizado para execução do SQL Server em container
+
+Padronização do ambiente
+
+Facilidade de setup e testes locais
+
+☸️ Kubernetes
+
+Kubernetes (exemplo / conceito)
+Projeto preparado para estudos de deploy e service, simulando execução em ambiente orquestrado.
+
+🔐 Segurança
+
+Acesso via AWS Systems Manager (Session Manager), sem exposição da porta 1433
+
+Uso de chave SSH (.pem) com permissões restritas
+
+Port forwarding seguro para conexão local
+
+Boas práticas de isolamento de recursos em nuvem
+
+📦 Banco de Dados
+
+Banco AdventureWorks2022 restaurado com sucesso
+
+Ambiente pronto para consultas, estudos e testes
+
+🖥️ Principais Comandos Utilizados
+🔑 Conexão SSH
+ssh -i ~/.ssh/bia-conectividade-linux.pem ec2-user@<public-dns-ec2>
+
+🐳 Verificação do Docker
 docker --version
 docker ps
 
-## 📥 Download do AdventureWorks2022
-```bash
+📥 Download do AdventureWorks2022
 wget https://github.com/.../AdventureWorks2022.bak
 ls AdventureWorks2022.bak
 
-## 🗄️ Subir container do SQL Server 2022
-```bash
+🗄️ Subir container do SQL Server 2022
 docker run -e "ACCEPT_EULA=Y" \
   -e "MSSQL_SA_PASSWORD=SenhaSegura123!" \
-  -p 1433:1433 --name sql1 --hostname sql1 \
+  -p 1433:1433 \
+  --name sql1 \
+  --hostname sql1 \
   -d mcr.microsoft.com/mssql/server:2022-latest
 
-## 🛠️ Conexão via sqlcmd
-```bash
+🛠️ Conexão via sqlcmd
 docker exec -it sql1 /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'SenhaSegura123!'
 
-## 📂 Restaurar banco AdventureWorks
-```bash
+📂 Restaurar banco AdventureWorks2022
 RESTORE DATABASE AdventureWorks2022
 FROM DISK = '/var/opt/mssql/data/AdventureWorks2022.bak'
-WITH MOVE 'AdventureWorks2022' TO '/var/opt/mssql/data/AdventureWorks2022.mdf',
-     MOVE 'AdventureWorks2022_log' TO '/var/opt/mssql/data/AdventureWorks2022.ldf';
-	 
-	 Autor: Ana Paula Duarte
-Contato: apduartte@gmail.com
+WITH MOVE 'AdventureWorks2022' 
+     TO '/var/opt/mssql/data/AdventureWorks2022.mdf',
+     MOVE 'AdventureWorks2022_log' 
+     TO '/var/opt/mssql/data/AdventureWorks2022.ldf';
 
+🚀 Evoluções Possíveis
+
+Integração com aplicações Java ou .NET
+
+Criação de pipelines CI/CD
+
+Implementação completa de testes automatizados
+
+Automação de infraestrutura com Terraform
+
+Evolução para RDS gerenciado e/ou Kubernetes
+
+📚 Contexto
+
+Projeto desenvolvido com foco em aprendizado contínuo, prática em cloud AWS e preparação para cenários reais de engenharia de software e dados.
+
+Autora: Ana Paula Duarte
+📧 Contato: apduartte@gmail.com
+
+🔗 GitHub: https://github.com/apduartte
