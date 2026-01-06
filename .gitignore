@@ -3,4 +3,4 @@
 *.iml
 node_modules/
 target/
-.DS_Store
+.DS_Storemintty*.png
